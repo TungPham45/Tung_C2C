@@ -2,20 +2,28 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Quản lý</title>
+    <title>Quản trị hệ thống - C2C</title>
     <link rel="stylesheet" href="/quanlyc2c/Public/Css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="auth-container wide">
-        <h2 style="color: #e74a3b;">DASHBOARD QUẢN LÝ</h2>
-        <div class="alert alert-success">
-            Chào mừng Quản lý: <strong><?php echo $username; ?></strong>
-        </div>
-        <p style="text-align: center;">Đây là trang dành cho <strong>Quản lý</strong>. Bạn có quyền điều hành hệ thống.</p>
-        
-        <div style="margin-top: 20px; text-align: center;">
-            <a href="/quanlyc2c/Public/auth/logout" class="btn" style="background: #e74a3b; text-decoration: none; display: inline-block; width: auto; padding: 10px 20px;">Đăng xuất</a>
+<body class="admin-body">
+    <div class="admin-container">
+        <?php include_once 'layouts/sidebar.php'; ?>
+
+        <div class="main-layout">
+            <?php include_once 'layouts/header.php'; ?>
+
+            <main class="content-area">
+                <?php 
+                    if (isset($contentView) && file_exists($contentView)) {
+                        include_once $contentView;
+                    } else {
+                        echo '<div class="welcome-box"><h3>Chào mừng bạn đến với trang quản trị</h3></div>';
+                    }
+                ?>
+            </main>
         </div>
     </div>
+    <script src="/quanlyc2c/Public/Js/script.js"></script>
 </body>
 </html>

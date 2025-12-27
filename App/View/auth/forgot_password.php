@@ -16,7 +16,7 @@
 
         <form action="/quanlyc2c/Public/auth/forgotPassword" method="POST">
             <div class="form-group">
-                <label>Email đăng ký</label>
+                <label>Email đăng ký:</label>
                 <input type="email" name="email" required placeholder="example@gmail.com">
             </div>
             <button type="submit" class="btn">Gửi mã OTP</button>

@@ -64,15 +64,38 @@ class AuthController {
             $identifier = $_POST['username_or_email'];
             $password = $_POST['password'];
 
-            $user = $this->authModel->login($identifier, $password);
+            $user = $this->authModel->login($identifier);
 
-            if ($user) {
-                $_SESSION['user_id'] = $user['mataikhoan'];
-                $_SESSION['role'] = $user['loaitaikhoan'];
-                $_SESSION['username'] = $user['tentaikhoan'];
+            if ($user && password_verify($password, $user['matkhau'])) {
+                
+                // KIỂM TRA TRẠNG THÁI TÀI KHOẢN
+                switch ($user['trangthai']) {
+                    case 'Chờ duyệt':
+                        $error = "Tài khoản của bạn đang chờ quản trị viên xét duyệt!";
+                        require_once '../App/View/auth/login.php';
+                        return; // Dùng return thay vì break để dừng hẳn hàm login
 
-                header("Location: /quanlyc2c/Public/home/index");
-                exit();
+                    case 'Bị khóa':
+                        $error = "Tài khoản này đã bị khóa do vi phạm chính sách!";
+                        require_once '../App/View/auth/login.php';
+                        return; // Dùng return thay vì break để dừng hẳn hàm login
+
+                    case 'Hoạt động':
+                        // 1. Lưu thông tin vào Session
+                        $_SESSION['user_id'] = $user['id_nguoidung'];
+                        $_SESSION['role'] = $user['loaitaikhoan'];
+                        $_SESSION['username'] = $user['tentaikhoan'];
+                        
+                        // 2. PHÂN LUỒNG ĐIỀU HƯỚNG THEO LOẠI TÀI KHOẢN
+                        header("Location: /quanlyc2c/Public/home/index");
+                        exit();
+                        break;
+
+                    default:
+                        $error = "Trạng thái không xác định: " . $user['trangthai'];
+                        require_once '../App/View/auth/login.php';
+                        break;
+                }
             } else {
                 $error = "Tài khoản hoặc mật khẩu không chính xác!";
                 require_once '../App/View/auth/login.php';
@@ -95,8 +118,7 @@ class AuthController {
                 $_SESSION['temp_account'] = [
                     'username' => $username,
                     'email'    => $email,
-                    'password' => $_POST['matkhau'],
-                    'role'     => $_POST['loaitaikhoan']
+                    'password' => $_POST['matkhau']
                 ];
                 header("Location: /quanlyc2c/Public/auth/registerStep2");
                 exit();
@@ -115,23 +137,26 @@ class AuthController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $accountData = $_SESSION['temp_account'];
+            
+
             $personalData = [
-                'name'    => $_POST['fullname'],
-                'gender'  => $_POST['gioitinh'],
-                'dob'     => $_POST['ngaysinh'],
-                'phone'   => $_POST['sdt'],
-                'address' => $_POST['diachi']
+            'name'     => $_POST['fullname'],
+            'gioitinh' => $_POST['gioitinh'], // THÊM DÒNG NÀY
+            'ngaysinh' => $_POST['ngaysinh'], // THÊM DÒNG NÀY
+            'phone'    => $_POST['sdt'],
+            'address'  => $_POST['diachi']
             ];
 
-            $result = $this->authModel->register($accountData, $personalData, $accountData['role']);
+            // SỬA TẠI ĐÂY: Truyền đủ 3 tham số vào hàm register
+            $result = $this->authModel->register($accountData, $personalData);
 
             if ($result) {
                 unset($_SESSION['temp_account']);
-                $_SESSION['success'] = "Đăng ký thành công!";
+                $_SESSION['success'] = "Đăng ký thành công! Vui lòng chờ phê duyệt.";
                 header("Location: /quanlyc2c/Public/auth/login");
                 exit();
             } else {
-                $error = "Có lỗi xảy ra, vui lòng thử lại.";
+                $error = "Có lỗi xảy ra trong quá trình lưu dữ liệu.";
                 require_once '../App/View/auth/register_step2.php';
             }
         } else {

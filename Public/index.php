@@ -24,7 +24,10 @@ if (file_exists($controllerPath)) {
     
     if (method_exists($controller, $action)) {
         // Gọi hàm xử lý (Ví dụ: AuthController->login())
-        $controller->$action();
+        $params = array_slice($url, 2); 
+    
+        // Gọi hàm và truyền mảng tham số vào
+        call_user_func_array([$controller, $action], $params);
     } else {
         echo "404 - Action không tồn tại!";
     }

@@ -18,12 +18,12 @@
         
         <form action="/quanlyc2c/Public/auth/login" method="POST">
             <div class="form-group">
-                <label>Tên tài khoản hoặc Email</label>
+                <label>Tên tài khoản hoặc Email:</label>
                 <input type="text" name="username_or_email" required placeholder="admin@test.com">
             </div>
             
             <div class="form-group">
-                <label>Mật khẩu</label>
+                <label>Mật khẩu:</label>
                 <input type="password" name="password" required placeholder="••••••••">
             </div>
             

@@ -16,26 +16,23 @@
 
         <form action="/quanlyc2c/Public/auth/registerStep1" method="POST">
             <div class="form-group">
-                <label>Tên đăng nhập</label>
+                <label>Tên đăng nhập:</label>
                 <input type="text" name="tentaikhoan" required>
             </div>
             <div class="form-group">
-                <label>Email</label>
+                <label>Email:</label>
                 <input type="email" name="email" required>
             </div>
             <div class="form-group">
-                <label>Mật khẩu</label>
+                <label>Mật khẩu:</label>
                 <input type="password" name="matkhau" required>
             </div>
-            <div class="form-group">
-                <label>Bạn là ai?</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="loaitaikhoan" value="Người dùng" checked> Người dùng</label>
-                    <label><input type="radio" name="loaitaikhoan" value="Quản lý"> Quản lý</label>
-                </div>
-            </div>
+            
             <button type="submit" class="btn">Tiếp theo &raquo;</button>
         </form>
+        <div class="auth-footer">
+            <a href="/quanlyc2c/Public/auth/login">Đã có tài khoản?</a>  
+        </div>
     </div>
 </body>
 </html>
